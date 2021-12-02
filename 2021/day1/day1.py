@@ -38,21 +38,17 @@ def part2():
     currentIndex = 0
     numIncrease = 0
 
-    while(currentIndex < len(numList)):
+    while(currentIndex < len(numList) - 2):
         
         if currentIndex == 0:
             currentIndex += 1
         else:
-            #try to calculate sums of three pair of current index + next two numbers and and previous index + next two numbers
-            try:
-                sum1 = numList[currentIndex] + numList[currentIndex + 1] + numList[currentIndex + 2]
-                sum2 = numList[currentIndex - 1] + numList[currentIndex] + numList[currentIndex + 1]
-                # increment numIncrease if sum1 is greater
-                if (sum1 > sum2):
-                    numIncrease += 1
-            # catch IndexError
-            except IndexError:
-                pass
+            # try:
+            sum1 = numList[currentIndex] + numList[currentIndex + 1] + numList[currentIndex + 2]
+            sum2 = numList[currentIndex - 1] + numList[currentIndex] + numList[currentIndex + 1]
+            # increment numIncrease if sum1 is greater
+            if (sum1 > sum2):
+                numIncrease += 1
             currentIndex += 1
     print(f"Day 1 Part 2 Answer: {numIncrease}")
 
