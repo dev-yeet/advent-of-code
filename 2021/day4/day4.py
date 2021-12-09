@@ -1,7 +1,7 @@
 from pprint import pprint
 
 
-winningBoard,winnerScore,finalBoard,finalScore = [],None,[],None
+winningBoard,winnerScore,finalBoard,finalScore,winnerList = [],None,[],None,[]
 
 def generateGameBoards():
     
@@ -34,66 +34,57 @@ def getBoardSum(list):
                 sum += int(list[i][j])
     return sum
 
-def checkforWin(string_input):
+def checkforWin(board,num):
 
     global winnerScore,finalScore
 
     global gameBoardList
 
-    for board in gameBoardList.copy():
-            for i in range(len(board)):
-                hits = 0
-                for j in range(len(board[0])):
-                    if "*" in f"{board[i][j]}":
-                        hits += 1
-                        if hits == 5:
-                            if winnerScore == None:
-                                winnerScore = getBoardSum(board) * int(string_input)
-                                gameBoardList.remove(board)
-                                return
-                            else:
-                                if len(gameBoardList) > 1:
-                                    gameBoardList.remove(board)
-                                    return
-                                else:
-                                    finalScore = getBoardSum(board)
-                                    gameBoardList.remove(board)
-                                    return
-                            
-            for j in range(len(board[0])):
-                hits = 0
-                for i in range(len(board)):
-                    if "*" in f"{board[i][j]}":
-                        hits += 1
-                        if hits == 5:
-                            if winnerScore == None:
-                                winnerScore = getBoardSum(board) * int(string_input)
-                                gameBoardList.remove(board)
-                                return
-                            else:
-                                if len(gameBoardList) > 1:
-                                    gameBoardList.remove(board)
-                                    return
-                                else:
-                                    finalScore = getBoardSum(board)
-                                    gameBoardList.remove(board)
-                                    return
+    for i in range(len(board)):
+        hits = 0
+        for j in range(len(board[0])):
+            if "*" in f"{board[i][j]}":
+                hits += 1
+                if hits == 5:
+                    return True
+            
+                    
+    for j in range(len(board[0])):
+        hits = 0
+        for i in range(len(board)):
+            if "*" in f"{board[i][j]}":
+                hits += 1
+                if hits == 5:
+                    return True
+                     
 def checkNumber(string_input):
-    for board in gameBoardList:
+    for index,board in enumerate(gameBoardList):
         for i in range(len(board)):
             for j in range(len(board[0])):
                 if board[i][j] == string_input:
                     board[i][j] = f"*{board[i][j]}"
+        if checkforWin(board,string_input):
+            if len(gameBoardList) > 1:
+                print(index)
+                tempGameBoardList.pop(index)
+                global winnerList
+                winnerList.append(string_input)
+            else:
+                return
+
                        
 def main():
     generateGameBoards()
     
+    global tempGameBoardList
+    tempGameBoardList = gameBoardList.copy()
+    
     for num in bingoInput:
         checkNumber(num)
-        checkforWin(num)
-        # pprint(len(gameBoardList))
-        print(num)
-
+    
+    pprint(tempGameBoardList)
+    # loserScore = getBoardSum(gameBoardList[0])
+    # print(loserScore)
 
     # print(f"Winner Score: {winnerScore}")
     # print(f"Loser Score: {finalScore}")
