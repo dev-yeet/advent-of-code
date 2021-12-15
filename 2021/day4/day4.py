@@ -1,7 +1,7 @@
 from pprint import pprint
 
 
-winningBoard,winnerScore,finalBoard,finalScore,winnerList = [],None,[],None,[]
+winningBoard,winnerScore,finalBoard,finalScore,winnersList = [],None,[],None,[]
 
 def generateGameBoards():
     
@@ -17,14 +17,13 @@ def generateGameBoards():
     gameBoardList = []
 
     for line in fileLines:
-        if line != "\n":
-            if len(tempGameBoard) < 5:
-                tempGameBoard.append(line.split())
-            else:
-                gameBoardList.append(tempGameBoard.copy())
-                tempGameBoard = []
-                tempGameBoard.append(line.split())
+        if len(line) > 1:                
+            tempGameBoard.append(line.split())
 
+            if len(tempGameBoard) == 5:
+                gameBoardList.append(tempGameBoard)
+                tempGameBoard = []
+    
 def getBoardSum(list):
     
     sum = 0
@@ -58,36 +57,43 @@ def checkforWin(board,num):
                     return True
                      
 def checkNumber(string_input):
+        
     for index,board in enumerate(gameBoardList):
+        tempBoard = board.copy()
+        print(tempBoard)
         for i in range(len(board)):
             for j in range(len(board[0])):
                 if board[i][j] == string_input:
                     board[i][j] = f"*{board[i][j]}"
         if checkforWin(board,string_input):
-            if len(gameBoardList) > 1:
-                print(index)
-                tempGameBoardList.pop(index)
-                global winnerList
-                winnerList.append(string_input)
-            else:
-                return
+            if tempBoard not in winnersList:
+                winnersList.append(tempBoard)
+                winnersLastInputList.append(int(string_input))
 
                        
 def main():
     generateGameBoards()
-    
-    global tempGameBoardList
-    tempGameBoardList = gameBoardList.copy()
-    
+
+    global winnersList,winnersLastInputList
+    winnersList,winnersLastInputList = [],[]
+
     for num in bingoInput:
         checkNumber(num)
-    
-    pprint(tempGameBoardList)
-    # loserScore = getBoardSum(gameBoardList[0])
-    # print(loserScore)
 
-    # print(f"Winner Score: {winnerScore}")
-    # print(f"Loser Score: {finalScore}")
+        for winner in winnersList:
+            if winner in gameBoardList:
+                gameBoardList.remove(winner)
+    
+    winnerScore = getBoardSum(winnersList[0]) * winnersLastInputList[0]
+    loserScore = getBoardSum(winnersList[-1]) * winnersLastInputList[-1]
+
+    print(f"Winner Score: {winnerScore}")
+    pprint(winnersList[0])
+
+
+    print(f"Loser Score: {loserScore}")
+    pprint(winnersList[-1])
+
 
 
 if __name__ == "__main__":
